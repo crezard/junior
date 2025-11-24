@@ -8,15 +8,17 @@ const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 export const generateVocabulary = async (topic: string): Promise<VocabWord[]> => {
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
-    contents: `Generate a list of 6 English vocabulary words suitable for a Korean Middle School Year 1 student (Grade 7) related to the topic: "${topic}".
-    For each word, provide:
-    1. The English word.
-    2. A simple phonetic guide (e.g., [apple]).
-    3. The Korean meaning (definition).
-    4. A simple example sentence using the word.
-    5. The Korean translation of the example sentence.
+    contents: `Generate a list of 6 English vocabulary words suitable for a Korean Middle School Year 1 student (Grade 7, Age 13) related to the topic: "${topic}".
     
-    Ensure the difficulty level is appropriate for beginners/intermediate learners (CEFR A1/A2).`,
+    Target Level: CEFR A1/A2 (Beginner/Elementary).
+    The examples should be simple, clear, and easy to understand for a young student.
+
+    For each word, provide:
+    1. The English word (e.g., "Apple").
+    2. A simple phonetic guide (e.g., [ae-pul]).
+    3. The Korean meaning (e.g., "사과").
+    4. A simple example sentence (e.g., "I eat an apple.").
+    5. The Korean translation of the sentence (e.g., "나는 사과를 먹어요.").`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
