@@ -1,0 +1,5 @@
+{
+  "name": "Junior Vocab Master",
+  "description": "A smart English vocabulary builder for Middle School Year 1 students, powered by Gemini. Features topic-based learning, AI-generated examples, pronunciation, and quizzes.",
+  "requestFramePermissions": []
+}
