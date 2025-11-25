@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { VocabWord, QuizResult } from '../types';
-import { CheckCircle, XCircle, RefreshCw, ArrowRight } from 'lucide-react';
+import { CheckCircle, XCircle, ArrowRight, X } from 'lucide-react';
 import { playPronunciation } from '../services/geminiService';
 
 interface QuizProps {
@@ -60,14 +60,16 @@ export const Quiz: React.FC<QuizProps> = ({ words, onComplete, onExit }) => {
     }
   };
 
-  if (!currentWord) return <div>Loading quiz...</div>;
+  if (!currentWord) return <div>퀴즈 불러오는 중...</div>;
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
+    <div className="max-w-2xl mx-auto p-4 animate-fade-in-up">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
         <div className="bg-indigo-600 p-6 text-white flex justify-between items-center">
-          <span className="font-bold text-lg">Quiz {currentIndex + 1} / {words.length}</span>
-          <button onClick={onExit} className="text-white/80 hover:text-white text-sm">Exit</button>
+          <span className="font-bold text-lg">퀴즈 {currentIndex + 1} / {words.length}</span>
+          <button onClick={onExit} className="text-white/80 hover:text-white flex items-center gap-1 text-sm font-medium transition-colors">
+            <X size={16} /> 나가기
+          </button>
         </div>
 
         <div className="p-8 text-center">
@@ -111,7 +113,7 @@ export const Quiz: React.FC<QuizProps> = ({ words, onComplete, onExit }) => {
               onClick={handleNext}
               className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-indigo-700 transition-colors"
             >
-              {currentIndex === words.length - 1 ? "Finish" : "Next"} <ArrowRight size={20} />
+              {currentIndex === words.length - 1 ? "결과 보기" : "다음 문제"} <ArrowRight size={20} />
             </button>
           </div>
         )}

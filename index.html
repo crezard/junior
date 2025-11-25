@@ -5,34 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Junior Vocab Master</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
       body {
         font-family: 'Nunito', 'Noto Sans KR', sans-serif;
       }
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f5f9;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
       }
       .animate-fade-in-up {
-        animation: fadeIn 0.5s ease-out forwards;
+        animation: fadeInUp 0.5s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      /* Error display styles */
+      #error-display {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.98);
+        z-index: 10000;
+        overflow: auto;
+        padding: 2rem;
+      }
+      .error-content {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #fee2e2;
+        border: 2px solid #ef4444;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        color: #991b1b;
+        font-family: monospace;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
       }
     </style>
-  <script type="importmap">
+    
+    <!-- Global Error Handler -->
+    <script>
+      // Safety shim for process.env if not defined by bundler
+      if (typeof process === 'undefined') {
+        window.process = { env: { API_KEY: '' } };
+        console.warn('Environment variables missing: process.env shimmed');
+      }
+
+      window.onerror = function(msg, url, lineNo, columnNo, error) {
+        var container = document.getElementById('error-display');
+        var content = document.getElementById('error-text');
+        if (container && content) {
+          container.style.display = 'block';
+          var errorHtml = '<div style="margin-bottom: 1rem; border-bottom: 1px solid #fca5a5; padding-bottom: 1rem;">';
+          errorHtml += '<h3 style="font-weight: bold; font-size: 1.1em;">Runtime Error</h3>';
+          errorHtml += '<p><strong>Message:</strong> ' + msg + '</p>';
+          errorHtml += '<p><strong>Location:</strong> ' + url + ':' + lineNo + ':' + columnNo + '</p>';
+          if (error && error.stack) {
+            errorHtml += '<pre style="margin-top: 0.5rem; background: white; padding: 0.5rem; border-radius: 0.25rem; overflow-x: auto; font-size: 0.8em;">' + error.stack + '</pre>';
+          }
+          errorHtml += '</div>';
+          content.innerHTML += errorHtml;
+        }
+        return false;
+      };
+
+      window.addEventListener('unhandledrejection', function(event) {
+        var container = document.getElementById('error-display');
+        var content = document.getElementById('error-text');
+        if (container && content) {
+          container.style.display = 'block';
+          var errorHtml = '<div style="margin-bottom: 1rem; border-bottom: 1px solid #fca5a5; padding-bottom: 1rem;">';
+          errorHtml += '<h3 style="font-weight: bold; font-size: 1.1em;">Unhandled Promise Rejection</h3>';
+          errorHtml += '<p><strong>Reason:</strong> ' + event.reason + '</p>';
+          errorHtml += '</div>';
+          content.innerHTML += errorHtml;
+        }
+      });
+    </script>
+
+    <script type="importmap">
 {
   "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.0/client",
-    "react-dom": "https://aistudiocdn.com/react-dom@^19.2.0",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?deps=react@18.2.0",
+    "react-dom": "https://esm.sh/react-dom@18.2.0?deps=react@18.2.0",
+    "@google/genai": "https://esm.sh/@google/genai@0.1.2",
+    "lucide-react": "https://esm.sh/lucide-react@0.300.0?deps=react@18.2.0",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
     "react/": "https://aistudiocdn.com/react@^19.2.0/"
   }
 }
 </script>
-</head>
-  <body class="bg-indigo-50 text-slate-900">
-    <div id="root"></div>
+  </head>
+  <body class="bg-slate-50 text-slate-900">
+    <!-- Error Display Container -->
+    <div id="error-display">
+      <div class="error-content">
+        <h2 class="text-xl font-bold mb-4 text-red-800 flex items-center gap-2">
+          ⚠️ Application Error
+        </h2>
+        <p class="mb-4 text-red-700">아래 에러 내용을 확인해주세요 (Please check the errors below):</p>
+        <div id="error-text"></div>
+        <button onclick="window.location.reload()" class="mt-6 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors font-bold">
+          Reload App
+        </button>
+      </div>
+    </div>
+
+    <div id="root">
+      <div class="h-screen w-full flex flex-col items-center justify-center space-y-4">
+        <div class="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+        <p class="text-slate-500 font-medium">단어장을 불러오는 중...</p>
+      </div>
+    </div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>

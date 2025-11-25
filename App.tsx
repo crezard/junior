@@ -27,7 +27,7 @@ const App: React.FC = () => {
       }
     } catch (err) {
       console.error(err);
-      setError("Failed to generate words. Please check your API Key or try again.");
+      setError("단어를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.");
     } finally {
       setIsLoading(false);
     }
@@ -57,11 +57,11 @@ const App: React.FC = () => {
 
   const handleRestart = () => {
     setMode(AppMode.LEARN);
-    loadWords(currentTopic); // Get fresh words for a new round? Or keep same? Let's refresh to keep it dynamic
+    loadWords(currentTopic); // Get fresh words for a new round
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-[Nunito]">
       {/* Header */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -69,15 +69,15 @@ const App: React.FC = () => {
             <div className="bg-indigo-600 p-2 rounded-lg text-white">
               <BookOpen size={24} />
             </div>
-            <h1 className="text-xl font-extrabold text-slate-800 tracking-tight">
-              Junior Vocab<span className="text-indigo-600">Master</span>
+            <h1 className="text-xl font-extrabold text-slate-800 tracking-tight font-[Nunito]">
+              중학 영단어 <span className="text-indigo-600">마스터</span>
             </h1>
           </div>
           
           <div className="flex items-center gap-4">
              {mode === AppMode.LEARN && (
                <div className="hidden sm:flex items-center gap-2">
-                 <label htmlFor="topic-select" className="text-sm font-medium text-slate-600">Topic:</label>
+                 <label htmlFor="topic-select" className="text-sm font-medium text-slate-600">주제:</label>
                  <select 
                    id="topic-select"
                    value={currentTopic} 
@@ -101,41 +101,41 @@ const App: React.FC = () => {
           
           {/* Error State */}
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 text-red-700">
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 text-red-700 animate-fade-in-up">
               <AlertCircle size={24} />
               <p>{error}</p>
-              <button onClick={() => loadWords(currentTopic)} className="ml-auto text-sm font-bold hover:underline">Retry</button>
+              <button onClick={() => loadWords(currentTopic)} className="ml-auto text-sm font-bold hover:underline">다시 시도</button>
             </div>
           )}
 
           {/* Loading State */}
           {isLoading && (
-            <div className="flex flex-col items-center justify-center h-64 space-y-4">
+            <div className="flex flex-col items-center justify-center h-64 space-y-4 animate-fade-in-up">
               <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-              <p className="text-slate-500 animate-pulse font-medium">Gemini AI is creating your lesson...</p>
+              <p className="text-slate-500 animate-pulse font-medium">AI 선생님이 단어장을 만들고 있어요...</p>
             </div>
           )}
 
           {/* Learn Mode */}
           {!isLoading && !error && mode === AppMode.LEARN && (
-            <>
+            <div className="animate-fade-in-up">
               <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
                 <div>
                    <h2 className="text-2xl font-bold text-slate-900">{currentTopic}</h2>
-                   <p className="text-slate-500 mt-1">Middle School Year 1 Vocabulary</p>
+                   <p className="text-slate-500 mt-1 font-[Noto Sans KR]">중학교 1학년 필수 영단어</p>
                 </div>
                 <div className="flex gap-2 w-full sm:w-auto">
                     <button 
                         onClick={() => loadWords(currentTopic)}
                         className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm"
                     >
-                        <RefreshCw size={18} /> Refresh Words
+                        <RefreshCw size={18} /> 새 단어 받기
                     </button>
                     <button 
                         onClick={handleStartQuiz}
                         className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2 bg-indigo-600 rounded-lg text-white font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200"
                     >
-                        <GraduationCap size={20} /> Start Quiz
+                        <GraduationCap size={20} /> 퀴즈 시작
                     </button>
                 </div>
               </div>
@@ -162,7 +162,7 @@ const App: React.FC = () => {
               <div className="mt-12 text-center text-slate-400 text-sm flex items-center justify-center gap-1">
                  <Sparkles size={14} /> Powered by Google Gemini 2.5
               </div>
-            </>
+            </div>
           )}
 
           {/* Quiz Mode */}
